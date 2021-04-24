@@ -21,20 +21,14 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
+import static transport.FrameConstant.*;
+
 public class ToyClient implements Client{
     private ServiceURL serviceURL;
     private volatile boolean initialized = false;
     EventLoopGroup group;
     Bootstrap bootstrap;
     volatile Channel futureChannel;
-    public static final int HEART_BEAT_TIME_OUT = 20;
-    public static final int HEART_BEAT_TIME_OUT_MAX_TIME = 3;
-    public static final int MAX_FRAME_LENGTH = 1024 * 1024;
-    public static final int LENGTH_FIELD_OFFSET = 0;
-    public static final int LENGTH_FIELD_LENGTH = 4;
-    public static final int LENGTH_ADJUSTMENT = 0;
-    // 这样下一个Handler接收到的就不包含length了，直接就是message
-    public static final int INITIAL_BYTES_TO_STRIP = 4;
 
     public void init(ServiceURL serviceURL) {
         this.serviceURL = serviceURL;
@@ -64,7 +58,7 @@ public class ToyClient implements Client{
             @Override
             public void initChannel(SocketChannel channel) throws Exception {
                 channel.pipeline()
-                        .addLast("IdleStateHandler", new IdleStateHandler(0, HEART_BEAT_TIME_OUT, 0))
+                        .addLast("IdleStateHandler", new IdleStateHandler(0, ToyConstant.HEART_BEAT_TIME_OUT, 0))
                         // ByteBuf -> Message
                         .addLast("LengthFieldPrepender", new LengthFieldPrepender(LENGTH_FIELD_LENGTH, LENGTH_ADJUSTMENT))
                         // Message -> ByteBuf

@@ -7,7 +7,7 @@ import registry.ServiceURL;
 import java.util.concurrent.Future;
 
 public interface Client {
-    Future<RPCResponse> submit(RPCRequest request);
+    Future<RPCResponse> submit(RPCRequest request); //send  rpc request
     void handleRPCResponse(RPCResponse response);
     void updateServiceConfig(ServiceURL serviceURL);
 
